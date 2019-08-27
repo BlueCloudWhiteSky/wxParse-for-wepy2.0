@@ -1,0 +1,96 @@
+<style lang="less" scoped>
+  @import '~@/wxParse/wxParse.wxss';
+</style>
+
+<template>
+  <import src="../wxParse/wxParse.wxml" />
+  <wx-template is="wxParse" data="{{wxParseData: htmlParserTpl.nodes}}"></wx-template>
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+  const WxParse = require('@/wxParse/wxParse')
+
+  wepy.component({
+    props: {
+      field: {
+        type: String,
+        default: 'htmlParserName'
+      },
+      content: {
+        type: String,
+        default: "<p style='font-size: 32rpx; padding: 30rpx 0; text-align: center;'>此处可以在html2wxml.wpy中自行选择删除</p>"
+      },
+      type: {
+        type: String,
+        default: 'html'
+      },
+      padding: {
+        type: Number,
+        default: 5
+      }
+    },
+    data: {
+      htmlParserTpl: {}
+    },
+    watch: {
+      content(val) {
+        console.log('parserContent change', val)
+        this.htmlParse()
+      }
+    },
+    methods: {
+      htmlParserNotice() {
+        this.htmlParse()
+      },
+      wxParseImgLoad(image) {
+        let imgInfo = image.detail
+      },
+      dealSwiper(nodes) {
+        let swiper = nodes.filter(item => item.tag === 'swiper')
+        let copyData = []
+        if (swiper.length === 0) {
+          return
+        }
+        swiper = swiper[0]
+        const { data } = swiper.attr
+        const arr = data.split(',').filter(item => item)
+        if (arr && arr.length > 0) {
+          arr.forEach(item => {
+            copyData.push({ image: item })
+          })
+          swiper.attr.data = copyData.slice(0, 10)
+        }
+        console.log('swiper', swiper)
+      },
+      htmlParse() {
+        /**
+         * WxParse.wxParse(bindName , type, data, target,imagePadding)
+         * 1.bindName绑定的数据名(必填)
+         * 2.type可以为html或者md(必填)
+         * 3.data为传入的具体数据(必填)
+         * 4.target为Page对象,一般为this(必填)
+         * 5.imagePadding为当图片自适应是左右的单一padding(默认为0,可选)
+         */
+        try {
+          console.log('wxParse', WxParse)
+          let htmlContent = WxParse.wxParse(
+            this.field,
+            this.type,
+            this.content || this.content.default,
+            this.$wx,
+            this.padding
+          )
+          this.htmlParserTpl = htmlContent[this.field]
+          console.log('------html', htmlContent)
+          // this.dealSwiper(this.htmlParserTpl.nodes)
+        } catch (e) {
+          console.warn('kinerHtmlParser:', '没有任何内容需要转换', e)
+        }
+      }
+    },
+    ready() {
+      this.htmlParse()
+    }
+  })
+</script>
