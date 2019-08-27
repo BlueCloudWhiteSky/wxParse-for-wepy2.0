@@ -1,7 +1,7 @@
 # 这是一个wxParse组件，用于wepy2.0
-1、下载wxParse的代码[wxParse](https://github.com/icindy/wxParse "wxParse")
-2、拷贝本项目 **src/components/** 目录下的 **html2wxml.wpy** 文件
-3、在wepy.config.js中加入以下代码
+1、下载wxParse的代码[wxParse](https://github.com/icindy/wxParse "wxParse")<br>
+2、拷贝本项目 **src/components/** 目录下的 **html2wxml.wpy** 文件<br>
+3、在wepy.config.js中加入以下代码<br>
    
     module.exports = {
 	...
